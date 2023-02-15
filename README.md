@@ -4,4 +4,4 @@ NPM         : 2106638173
 
 Kelas       : PBP
 
-Hobby       : Designing
+Hobby       : Design
