@@ -5,6 +5,12 @@ from django.http import HttpResponseRedirect
 from money_tracker.forms import TransactionRecordForm
 from django.urls import reverse
 from django.core import serializers
+from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+
+
 
 
 
@@ -14,14 +20,10 @@ def show_tracker(request):
 
     context = {
     'list_of_transactions': transaction_data,
-    'name': 'Ardian'
+    'name': request.user.username,
     }
 
     return render(request, "tracker.html", context)
-
-def say_hello(request):
-
-    return HttpResponse('Hello World')
 
 def create_transaction(request):
     form = TransactionRecordForm(request.POST or None)
@@ -53,3 +55,29 @@ def show_json_by_id(request, id):
     data = TransactionRecord.objects.filter(pk=id)
 
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Akun telah berhasil dibuat!')
+            return redirect('money_tracker:login')
+
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('money_tracker:show_tracker')
+        else:
+            messages.info(request, 'Username atau Password salah!')
+    context = {}
+    return render(request, 'login.html', context)
