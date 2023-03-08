@@ -14,14 +14,21 @@
     </tr>
     {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
     {% for transaction in list_of_transactions %}
-    <tr>
-        <td>{{transaction.name}}</td>
-        <td>{{transaction.type}}</td>
-        <td>{{transaction.amount}}</td>
-        <td>{{transaction.date}}</td>
-        <td>{{transaction.description}}</td>
-    </tr>
-{% endfor %}
+        <tr>
+            <td>{{transaction.name}}</td>
+            <td>{{transaction.type}}</td>
+            <td>{{transaction.amount}}</td>
+            <td>{{transaction.date}}</td>
+            <td>{{transaction.description}}</td>
+            <td>
+                <a href="{% url 'money_tracker:modify_transaction' transaction.pk %}">
+                    <button>
+                        Ubah
+                    </button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
 </table>
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 <br>
